@@ -87,4 +87,138 @@ async function viewEmployees() {
                     ON manager.id = employee.manager_id`)
     console.table(employee);
     startApp();
+}
+
+async function addDepartment() {
+    const department = await prompt([
+        {
+            type: "input",
+            name: "name",
+            message: "Enter the name of the department:",
+        },
+    ]);
+
+    await db.query("INSERT INTO department (name) VALUES (?)", department.name);
+    console.log("Department added successfully!");
+    startApp();
+}
+
+async function addRole() {
+    const departments = await db.query("SELECT * FROM department");
+    const departmentChoices = departments.map((department) => ({
+        name: department.name,
+        value: department.id,
+    }));
+
+    const role = await prompt([
+        {
+            type: "input",
+            name: "title",
+            message: "Enter the title of the role:",
+        },
+        {
+            type: "input",
+            name: "salary",
+            message: "Enter the salary for this role:",
+        },
+        {
+            type: "list",
+            name: "department_id",
+            message: "Select the department for this role:",
+            choices: departmentChoices,
+        },
+    ]);
+
+    await db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [
+        role.title,
+        role.salary,
+        role.department_id,
+    ]);
+    console.log("Role added successfully!");
+    startApp();
+}
+
+async function addEmployee() {
+    const roles = await db.query("SELECT * FROM role");
+    const roleChoices = roles.map((role) => ({
+        name: role.title,
+        value: role.id,
+    }));
+
+    const employees = await db.query("SELECT * FROM employee");
+    const managerChoices = employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id,
+    }));
+
+    managerChoices.push({ name: "None", value: null });
+
+    const employee = await prompt([
+        {
+            type: "input",
+            name: "first_name",
+            message: "Enter the employee's first name:",
+        },
+        {
+            type: "input",
+            name: "last_name",
+            message: "Enter the employee's last name:",
+        },
+        {
+            type: "list",
+            name: "role_id",
+            message: "Select the employee's role:",
+            choices: roleChoices,
+        },
+        {
+            type: "list",
+            name: "manager_id",
+            message: "Select the employee's manager:",
+            choices: managerChoices,
+        },
+    ]);
+
+    await db.query(
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+        [employee.first_name, employee.last_name, employee.role_id, employee.manager_id]
+    );
+    console.log("Employee added successfully!");
+    startApp();
+}
+
+async function updateEmployee() {
+    const employees = await db.query("SELECT * FROM employee");
+    const employeeChoices = employees.map((employee) => ({
+        name: `${employee.first_name} ${employee.last_name}`,
+        value: employee.id,
+    }));
+
+    const roles = await db.query("SELECT * FROM role");
+    const roleChoices = roles.map((role) => ({
+        name: role.title,
+        value: role.id,
+    }));
+
+    const updateInfo = await prompt([
+        {
+            type: "list",
+            name: "employee_id",
+            message: "Select the employee to update:",
+            choices: employeeChoices,
+        },
+        {
+            type: "list",
+            name: "role_id",
+            message: "Select the employee's new role:",
+            choices: roleChoices,
+        },
+    ]);
+
+    await db.query("UPDATE employee SET role_id = ? WHERE id = ?", [
+        updateInfo.role_id,
+        updateInfo.employee_id,
+    ]);
+    console.log("Employee role updated successfully!");
+    startApp();
 };
+
