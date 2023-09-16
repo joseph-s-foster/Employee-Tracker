@@ -14,4 +14,4 @@ INSERT INTO
         manager_id
     )
 
-VALUES ('Rachel', 'Green', 1, null), ('Gunther', 'Centralperk', 2, 1), ('Ross', 'Geller', 3, null), ('Joey', 'Tribbiani', 4, 3), ('Chandler', 'Bing', 5, null), ('Monica', 'Geller', 6, 5), ('Phoebe', 'Buffay', 7, null), ('Mike', 'Hannigan', 8, 7);
+VALUES ('Alan', 'Grant', 1, null), ('Dennis', 'Nedry', 2, 1), ('Ellie', 'Sattler', 3, null), ('Ian', 'Malcom', 4, 3), ('John', 'Hammond', 5, null), ('Ray', 'Arnold', 6, 5), ('Lex', 'Murphy', 7, null), ('Tim', 'Murphy', 8, 7);
