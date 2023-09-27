@@ -1,3 +1,4 @@
+use employee_db;
 INSERT INTO department (name)
 -- number value corresponds with id order -- 
 VALUES ('Engineering'), ('Finance'), ('Legal'), ('Sales');
